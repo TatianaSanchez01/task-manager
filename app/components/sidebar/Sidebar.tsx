@@ -17,10 +17,7 @@ function Sidebar() {
     };
 
     return (
-        <SidebarStyled
-            theme={theme}
-            className="relative rounded-2xl flex flex-col  justify-between"
-        >
+        <SidebarStyled theme={theme}>
             <div className="profile m-6 relative py-4 px-3 rounded-2xl cursor-pointer font-medium flex items-center">
                 <div className="profile-overlay absolute top-0 left-0 h-full w-full backdrop-blur-md z-0 rounded-2xl opacity-20"></div>
 
@@ -51,19 +48,31 @@ function Sidebar() {
                             }}
                         >
                             {menuItem.icon}
-                            <Link href={menuItem.link} className="font-medium">{menuItem.title}</Link>
+                            <Link href={menuItem.link} className="font-medium">
+                                {menuItem.title}
+                            </Link>
                         </li>
                     );
                 })}
             </ul>
-            <button className="m-6">Sign out</button>
+            <button className="m-6">
+                Sign out
+            </button>
         </SidebarStyled>
     );
 }
+
 const SidebarStyled = styled.nav`
+    position: relative;
     width: ${(props) => props.theme.sidebarWidth};
     background-color: ${(props) => props.theme.colorBg2};
-    border: 2px solid ${(props) => props.theme.borderColor};
+    border: 2px solid ${(props) => props.theme.borderColor2};
+    border-radius: 1rem;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
     color: ${(props) => props.theme.colorGrey3};
 
     .profile {
