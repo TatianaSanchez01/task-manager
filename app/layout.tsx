@@ -4,7 +4,9 @@ import "./globals.css";
 import Sidebar from "./components/sidebar/Sidebar";
 import GlobalStylesProvider from "./providers/GlobalStylesProvider";
 import ContextProvider from "./providers/ContextProvider";
-
+import { ClerkProvider } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
+import NextTopLoader from "nextjs-toploader";
 
 const nunito = Nunito({
     weight: ["400", "500", "600", "700", "800"],
@@ -21,8 +23,9 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+    const { userId } = auth();
     return (
-       
+        <ClerkProvider>
             <html lang="en">
                 <head>
                     <link
@@ -34,13 +37,20 @@ export default function RootLayout({
                     />
                 </head>
                 <body className={nunito.className}>
+                    <NextTopLoader
+                        height={4}
+                        color="blue"
+                        easing="cubic-bezier(0.53,0.21,0,1)"
+                        showSpinner={false}
+                    />
                     <ContextProvider>
                         <GlobalStylesProvider>
-                            <Sidebar />
+                            {userId && <Sidebar />}
                             {children}
                         </GlobalStylesProvider>
                     </ContextProvider>
                 </body>
             </html>
+        </ClerkProvider>
     );
 }

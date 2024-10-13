@@ -23,5 +23,5 @@ model Task {
 
   createdAt     DateTime    @default(now()) @map("created_At")
   updatedAt     DateTime    @default(now()) @map("updatedAt")
-  // userId        String?      @default("")
+  userId        String      
 }
