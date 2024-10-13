@@ -6,6 +6,9 @@ import styled from "styled-components";
 import { useGlobalState } from "@/app/context/globalProvider";
 import menu from "@/app/utils/menu";
 import { usePathname, useRouter } from "next/navigation";
+import Button from "../button/Button";
+import { logout } from "@/app/utils/icons";
+import { useClerk } from "@clerk/nextjs";
 
 function Sidebar() {
     const { theme } = useGlobalState();
@@ -16,11 +19,10 @@ function Sidebar() {
         router.push(link);
     };
 
+    const { signOut } = useClerk();
+
     return (
-        <SidebarStyled
-            theme={theme}
-            className="relative rounded-2xl flex flex-col  justify-between"
-        >
+        <SidebarStyled theme={theme}>
             <div className="profile m-6 relative py-4 px-3 rounded-2xl cursor-pointer font-medium flex items-center">
                 <div className="profile-overlay absolute top-0 left-0 h-full w-full backdrop-blur-md z-0 rounded-2xl opacity-20"></div>
 
@@ -51,19 +53,40 @@ function Sidebar() {
                             }}
                         >
                             {menuItem.icon}
-                            <Link href={menuItem.link} className="font-medium">{menuItem.title}</Link>
+                            <Link href={menuItem.link} className="font-medium">
+                                {menuItem.title}
+                            </Link>
                         </li>
                     );
                 })}
             </ul>
-            <button className="m-6">Sign out</button>
+            <div className="sign-out relative m-6">
+                <Button
+                    name="Sign Out"
+                    type="submit"
+                    padding="0.4rem 0.8rem"
+                    borderRad="0.8rem"
+                    fw="500"
+                    fs="1.2rem"
+                    icon={logout}
+                    click={() => signOut(() => router.push("/"))}
+                />
+            </div>
         </SidebarStyled>
     );
 }
+
 const SidebarStyled = styled.nav`
+    position: relative;
     width: ${(props) => props.theme.sidebarWidth};
     background-color: ${(props) => props.theme.colorBg2};
-    border: 2px solid ${(props) => props.theme.borderColor};
+    border: 2px solid ${(props) => props.theme.borderColor2};
+    border-radius: 1rem;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
     color: ${(props) => props.theme.colorGrey3};
 
     .profile {
