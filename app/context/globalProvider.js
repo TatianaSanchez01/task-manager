@@ -52,7 +52,7 @@ export const GlobalProvider = ({ children }) => {
     }, [user])
 
     return (
-        <GlobalContext.Provider value={{ theme, tasks, deleteTask, isLoading, completedTasks, importantTasks, incompleteTasks }}>
+        <GlobalContext.Provider value={{ theme, tasks, deleteTask, isLoading, completedTasks, importantTasks }}>
             <GlobalUpdateContext.Provider value={useGlobalState}>
                 {children}
             </GlobalUpdateContext.Provider>
