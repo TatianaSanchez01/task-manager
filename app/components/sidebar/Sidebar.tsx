@@ -8,18 +8,25 @@ import menu from "@/app/utils/menu";
 import { usePathname, useRouter } from "next/navigation";
 import Button from "../button/Button";
 import { logout } from "@/app/utils/icons";
-import { useClerk } from "@clerk/nextjs";
+import { useClerk, UserButton, useUser } from "@clerk/nextjs";
 
 function Sidebar() {
     const { theme } = useGlobalState();
     const router = useRouter();
     const pathname = usePathname();
 
+    const { signOut } = useClerk();
+    const { user } = useUser();
+
+    const { firstName, lastName, imageUrl } = user || {
+        firstName: "",
+        lastName: "",
+        imageUrl: "/avatar1.png",
+    };
+
     const handleClick = (link: string) => {
         router.push(link);
     };
-
-    const { signOut } = useClerk();
 
     return (
         <SidebarStyled theme={theme}>
@@ -30,15 +37,17 @@ function Sidebar() {
                     <Image
                         width={70}
                         height={70}
-                        src="/avatar1.png"
+                        src={imageUrl}
                         alt="profile"
                         className="rounded-full"
                     />
                 </div>
-                <h1 className="text-xl flex flex-col ml-3 relative z-1">
-                    <span>John</span>
-                    <span>Doe</span>
-                </h1>
+                <div className="user-btn absolute z-20 top-0 w-full h-full ">
+                    <UserButton />
+                </div>
+                <p className="capitalize ml-3 relative z-1">
+                    {firstName} {lastName}
+                </p>
             </div>
             <ul className="nav-items ">
                 {menu.map((menuItem) => {
@@ -89,8 +98,32 @@ const SidebarStyled = styled.nav`
 
     color: ${(props) => props.theme.colorGrey3};
 
+    .user-btn {
+      .cl-rootBox {
+        width: 100%;
+        height: 100%;
+
+        .cl-userButtonTrigger {
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+
+            .cl-userButtonBox {
+          width: 100%;
+          height: 100%;
+
+          
+        }
+          }
+
+        
+      }
+    }
+
     .profile {
         color: ${(props) => props.theme.colorGrey0};
+
+        
 
         .profile-overlay {
             background: ${(props) => props.theme.colorBg3};
