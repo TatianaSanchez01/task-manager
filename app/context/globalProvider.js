@@ -34,6 +34,20 @@ export const GlobalProvider = ({ children }) => {
 
             if (res) {
                 toast.success("Task deleted");
+                allTasks();
+            }
+        } catch (error) {
+            toast.error("Something went wrong")
+        }
+    }
+
+    const updateTask = async (task) => {
+        try {
+            const res = await axios.put(`/api/tasks/${task.id}`, task)
+
+            if (res) {
+                toast.success("Task updated");
+                allTasks();
             }
         } catch (error) {
             toast.error("Something went wrong")
@@ -54,7 +68,7 @@ export const GlobalProvider = ({ children }) => {
     }, [user])
 
     return (
-        <GlobalContext.Provider value={{ theme, tasks, deleteTask, isLoading, completedTasks, importantTasks, incompleteTasks }}>
+        <GlobalContext.Provider value={{ theme, tasks, deleteTask, updateTask, isLoading, completedTasks, importantTasks, incompleteTasks }}>
             <GlobalUpdateContext.Provider value={useGlobalState}>
                 {children}
             </GlobalUpdateContext.Provider>

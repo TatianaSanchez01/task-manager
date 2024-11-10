@@ -25,3 +25,28 @@ export async function DELETE(
         });
     }
 }
+
+export async function PUT(
+    req: Request,
+    { params }: { params: { id: string } }
+) {
+    try {
+        const { userId } = auth();
+        const { id } = params;
+        const { isCompleted } = await req.json();
+
+        if (!userId) {
+            return NextResponse.json({ error: "Unauthorized", status: 401 });
+        }
+
+        const task = await prisma.task.update({
+            where: { id },
+            data: { isCompleted },
+        });
+
+        return NextResponse.json(task);
+    } catch (error) {
+        console.log("Error updating task", error);
+        return NextResponse.json({ error: "Error updating task", status: 500 });
+    }
+}
