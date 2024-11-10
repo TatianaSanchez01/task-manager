@@ -7,11 +7,11 @@ import { useGlobalState } from "@/app/context/globalProvider";
 import menu from "@/app/utils/menu";
 import { usePathname, useRouter } from "next/navigation";
 import Button from "../button/Button";
-import { logout } from "@/app/utils/icons";
+import { arrowLeft, bars, logout } from "@/app/utils/icons";
 import { useClerk, UserButton, useUser } from "@clerk/nextjs";
 
 function Sidebar() {
-    const { theme } = useGlobalState();
+    const { theme, collapsed, collapseMenu } = useGlobalState();
     const router = useRouter();
     const pathname = usePathname();
 
@@ -29,7 +29,10 @@ function Sidebar() {
     };
 
     return (
-        <SidebarStyled theme={theme}>
+        <SidebarStyled theme={theme} collapsed={collapsed}>
+            <button className="toggle-nav" onClick={collapseMenu}>
+                {collapsed ? bars : arrowLeft}
+            </button>
             <div className="profile m-6 relative py-4 px-3 rounded-2xl cursor-pointer font-medium flex items-center">
                 <div className="profile-overlay absolute top-0 left-0 h-full w-full backdrop-blur-md z-0 rounded-2xl opacity-20"></div>
 
@@ -85,7 +88,7 @@ function Sidebar() {
     );
 }
 
-const SidebarStyled = styled.nav`
+const SidebarStyled = styled.nav<{ collapsed: boolean }>`
     position: relative;
     width: ${(props) => props.theme.sidebarWidth};
     background-color: ${(props) => props.theme.colorBg2};
@@ -97,6 +100,36 @@ const SidebarStyled = styled.nav`
     justify-content: space-between;
 
     color: ${(props) => props.theme.colorGrey3};
+    
+    .toggle-nav {
+      display:none;
+      position: absolute;
+      right: -2.5rem;
+      top: 3rem;
+      padding: 0.8rem;
+
+      border-top-right-radius: 0.5rem;
+      border-bottom-right-radius: 0.5rem;
+
+      background-color: ${(props) => props.theme.colorBg2};
+      border-right: 2px solid ${(props) => props.theme.borderColor2};
+      border-top: 2px solid ${(props) => props.theme.borderColor2};
+      border-bottom: 2px solid ${(props) => props.theme.borderColor2};
+    }
+
+    @media screen and (max-width: 768px) {
+      position: fixed;
+      height: calc(100vh - 2rem);
+      z-index: 100;
+
+      transition: all 0.3s cubic-bezier(0.53, 0.21, 0, 1);
+      transform: ${(props) =>
+          props.collapsed ? "translateX(-107%)" : "translateX(0)"};
+
+      .toggle-nav {
+        display: block !important;
+      }
+    }
 
     .user-btn {
       .cl-rootBox {
@@ -109,21 +142,16 @@ const SidebarStyled = styled.nav`
             opacity: 0;
 
             .cl-userButtonBox {
-          width: 100%;
-          height: 100%;
-
-          
-        }
+              width: 100%;
+              height: 100%;
+            }
           }
-
-        
+        }
       }
     }
 
     .profile {
         color: ${(props) => props.theme.colorGrey0};
-
-        
 
         .profile-overlay {
             background: ${(props) => props.theme.colorBg3};
