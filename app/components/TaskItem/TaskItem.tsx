@@ -18,7 +18,7 @@ function TaskItem({ id, task }: Props) {
             <h1 className="font-semibold text-2xl">{task.title}</h1>
             <p className="">{task.description}</p>
             <p className="date mt-auto">{formatDate(task.date)}</p>
-            <div className="task-footer flex items-center gap-5">
+            <div className="task-footer flex items-center justify-between gap-5">
                 {task.isCompleted ? (
                     <button
                         className="completed"
@@ -49,7 +49,6 @@ function TaskItem({ id, task }: Props) {
                     </button>
                 )}
 
-                <button className="edit">{edit}</button>
                 <button
                     className="delete"
                     onClick={() => {
