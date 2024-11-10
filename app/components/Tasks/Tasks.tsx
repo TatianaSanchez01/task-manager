@@ -5,6 +5,7 @@ import styled from "styled-components";
 import TaskItem from "../TaskItem/TaskItem";
 import { plus } from "@/app/utils/icons";
 import CreateContent from "../Modals/CreateContent";
+import Modal from "../Modals/Modal";
 
 interface Props {
     title: string;
@@ -12,17 +13,21 @@ interface Props {
 }
 
 function Tasks({ title, tasks }: Props) {
-    const { theme, isLoading } = useGlobalState();
+    const { theme, isLoading, openModal, modal } = useGlobalState();
 
     return (
         <TasksStyled theme={theme}>
+            {modal && <Modal content={<CreateContent />} />}
             <h1 className="font-extrabold relative">{title}</h1>
             {!isLoading ? (
                 <div className="grid grid-cols-tasks gap-6 my-8">
                     {tasks.map((task) => (
                         <TaskItem key={task.id} id={task.id} task={task} />
                     ))}
-                    <button className="create-task flex items-center justify-center gap-2 h-64 font-semibold pointer rounded-2xl">
+                    <button
+                        className="create-task flex items-center justify-center gap-2 h-64 font-semibold pointer rounded-2xl"
+                        onClick={openModal}
+                    >
                         {plus}
                         Add new task
                     </button>

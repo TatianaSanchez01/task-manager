@@ -11,9 +11,20 @@ export const GlobalUpdateContext = createContext()
 export const GlobalProvider = ({ children }) => {
     const { user } = useUser();
     const [selectedTheme, setSelectedTheme] = useState(0);
-    const theme = themes[selectedTheme];
     const [tasks, setTasks] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [modal, setModal] = useState(false)
+
+    const theme = themes[selectedTheme];
+
+
+    const openModal = () => {
+        setModal(true)
+    }
+
+    const closeModal = () => {
+        setModal(false)
+    }
 
     const allTasks = async () => {
         setIsLoading(true);
@@ -65,10 +76,10 @@ export const GlobalProvider = ({ children }) => {
             allTasks();
         }
 
-    }, [user])
+    }, [user]);
 
     return (
-        <GlobalContext.Provider value={{ theme, tasks, deleteTask, updateTask, isLoading, completedTasks, importantTasks, incompleteTasks }}>
+        <GlobalContext.Provider value={{ theme, tasks, allTasks, deleteTask, updateTask, isLoading, completedTasks, importantTasks, incompleteTasks, openModal, closeModal, modal }}>
             <GlobalUpdateContext.Provider value={useGlobalState}>
                 {children}
             </GlobalUpdateContext.Provider>
